@@ -32,8 +32,16 @@ const ExpandMore = styled((props) => {
 export default function BookStore() {
   const [expanded, setExpanded] = React.useState(false);
 
-  const { bookName, setBookName, book_array, setBook_array } =
-    useContext(myContextData);
+  const {
+    bookName,
+    setBookName,
+    book_array,
+    setBook_array,
+    mode_value,
+    mode_text_color,
+    size_text,
+    set_size_text,
+  } = useContext(myContextData);
 
   book_array.length > 0 ? console.log(book_array) : <></>;
 
@@ -43,16 +51,27 @@ export default function BookStore() {
 
   return (
     <div
+      className="bg_img_container"
       style={{
         display: "flex",
         justifyContent: "space-around",
         flexWrap: "wrap",
+        fontSize: "1.2rem",
       }}
     >
+      {/* <h1>image</h1> */}
       {console.log(book_array)}
       {book_array.map((item, index) => (
-        <Card sx={{ maxWidth: 345, m: 5 }}>
+        <Card
+          sx={{
+            maxWidth: 345,
+            m: 5,
+            backgroundColor: mode_value,
+            color: mode_text_color,
+          }}
+        >
           <CardHeader
+            sx={{ height: "10vh"}}
             avatar={
               <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
                 R
@@ -64,7 +83,6 @@ export default function BookStore() {
               </IconButton>
             }
             title={item.title}
-            
             subheader={item.publish_year ? item.publish_year[0] : 1998}
           />
 
@@ -76,20 +94,24 @@ export default function BookStore() {
               placeItems: "center",
             }}
           >
-            <NavLink to='/single_page' state={{'id':item.key}} style={{width:"100%",height:"100%"}}>
-            <img
-              style={{ width: "100%" }}
-              src={`https://covers.openlibrary.org/b/olid/${item.cover_edition_key}-M.jpg`}
-              alt="abc"
-            ></img>
+            <NavLink
+              to="/single_page"
+              state={{ id: item.key }}
+              style={{ width: "100%", height: "100%" }}
+            >
+              <img
+                style={{ width: "100%", height: "500px" }}
+                src={`https://covers.openlibrary.org/b/olid/${item.cover_edition_key}.jpg`}
+                alt="abc"
+              ></img>
             </NavLink>
           </div>
-          <CardContent>
+          <CardContent sx={{ mt: 2 }}>
             <h3 style={{ display: "inline-block" }}>Author : </h3>
-           {item.author_name ?
-           <h4 style={{ display: "inline-block" }}>{item.author_name}</h4>
-           : null}
-           
+            {item.author_name ? (
+              <h4 style={{ display: "inline-block" }}>{item.author_name}</h4>
+            ) : null}
+
             <Typography variant="body2" color="text.secondary">
               This impressive paella is a perfect party dish and a fun meal to
               cook together with your guests. Add 1 cup of frozen peas along

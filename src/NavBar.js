@@ -2,12 +2,21 @@ import React, { useContext } from "react";
 import { myContextData } from "./ContextData";
 
 import Box from "@mui/material/Box";
-import { AppBar, Toolbar, IconButton, Typography, Button } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Button,
+  Grid,
+  Switch,
+} from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import { NavLink } from "react-router-dom";
+import ModeNight from "@mui/icons-material/DarkMode";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -50,7 +59,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function NavBar() {
-  const {bookName,setBookName,book_array,setBook_array} = useContext(myContextData);
+  const {
+    bookName,
+    setBookName,
+    book_array,
+    setBook_array,
+    setMode,
+    setMode_text_color,
+  } = useContext(myContextData);
 
   const GetBookName = (e) => {
     setBookName(e.target.value);
@@ -58,36 +74,48 @@ function NavBar() {
 
   const searchbook = () => {
     alert(bookName);
-    fetch(`https://openlibrary.org/search.json?q=${bookName}=&mode=ebooks&has_fulltext=true`)
-    .then((res)=>res.json())
-    .then(json=>setBook_array(json.docs))
-  }
+    fetch(
+      `https://openlibrary.org/search.json?q=${bookName}=&mode=ebooks&has_fulltext=true`
+    )
+      .then((res) => res.json())
+      .then((json) => setBook_array(json.docs));
+  };
 
   // (bookName).length > 0 ? console.log(bookName) : <></>
 
+  const NightMode = (e) => {
+    if (e.target.checked) {
+      setMode("gray");
+      setMode_text_color("white");
+    } else {
+      setMode("white");
+      setMode_text_color("black");
+    }
+  };
+
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-around",
+        flexWrap: "wrap",
+        // border: "1px solid black",
+      }}
+    >
       {/* {console.log(book_array)} */}
-      <AppBar position="static">
-        <Toolbar>
+      <AppBar position="static" sx={{ backgroundColor: "rgb(225,220,198)" }}>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-around" }}>
           <IconButton
             size="large"
             edge="start"
             color="inherit"
             aria-label="open drawer"
-            sx={{ mr: 2 }}
+            // sx={{ border: "1px solid black" }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            variant="h6"
-            Wrap
-            component="div"
-            sx={{ display: { xs: "block", sm: "block", mr: 2 } }}
-          >
-            LIBRARY
-          </Typography>
-          <Search>
+          <img src="onlinelibrary.svg" alt="" width="200" height="100" />
+          <Search sx={{ backgroundColor: "white", color: "black" }}>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
@@ -97,9 +125,26 @@ function NavBar() {
               onChange={GetBookName}
             />
           </Search>
-          <Button onClick={searchbook} variant="contained" color="success">
+          <Button
+            onClick={searchbook}
+            variant="contained"
+            sx={{ backgroundColor: "rgb(116,158,192)" }}
+          >
             Search
           </Button>
+          <Box
+            sx={{
+              // border: "1px solid black",
+              display: "grid",
+              placeItems: "center",
+              backgroundColor: "rgb(116,158,192)",
+              borderRadius: "5px",
+            }}
+          >
+            <Switch onClick={NightMode} />
+            <Typography color="black">Change Mode</Typography>
+          </Box>
+          {/* </Box> */}
         </Toolbar>
       </AppBar>
     </Box>
